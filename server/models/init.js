@@ -1,10 +1,15 @@
 const  createCategoryTable = require('./category/init');
 const createProductTable = require('./products/init');
 const createProductImageTable = require('./products/productImagesInit')
+const createOrderTable = require('./orders/init');
+const createUserTable = require('./users/init');
+
 const initDatabase = async()=>{
     await createCategoryTable();
     await createProductTable();
     await createProductImageTable();
+    await createUserTable();
+    await createOrderTable();
 };
 
 const startInitialization = async()=>{
