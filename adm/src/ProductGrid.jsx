@@ -29,6 +29,23 @@ const ProductGrid = () => {
     fetchProducts();
   }, []);
 
+  const handleDelete = async (productId) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/products/${productId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+
+      // Remove the deleted product from the state
+      setProducts((prevProducts) => prevProducts.filter(product => product.product_id !== productId));
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
   if (loading) {
     return <div>Loading products...</div>;
   }
@@ -56,7 +73,7 @@ const ProductGrid = () => {
               <h3>${product.price}</h3>
               <h3>Brand: {product.brand_name}</h3>
               <button>Edit</button>
-              <button>Delete</button>
+              <button onClick={() => handleDelete(product.product_id)}>Delete</button>
             </div>
           ))
         ) : (

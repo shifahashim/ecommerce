@@ -10,7 +10,8 @@ router.route('/')
 router.route('/:id')
     .delete(productController.deleteProduct)
     .get(productController.getProduct)
-router.route('/:category_id')
-    .get(productController.getProductByName)
+    .patch(productController.updateProduct)
+router.route('/:category_name')
+    .get(productController.getProductByCategoryName)
 
 module.exports = router;

@@ -1,6 +1,7 @@
 const {query} = require('../../services/db.js')
 const {v4:uuid} = require('uuid');
 
+
 const getAll = async () => {
     const res = await query(`
     SELECT p.product_id, p.name, p.price, p.brand_name, MIN(pi.image_url) AS image
@@ -32,11 +33,18 @@ const get = async (id) => {
     return res;
 };
 
-const getByName = async (category_id) => {
-    const res = await query(`SELECT * FROM product WHERE category_id = ?;`, [category_id]);
+const getByCategoryName = async (categoryId) => {
+    const res = await query( `
+    SELECT p.product_id, p.name, p.price, p.brand_name, MIN(pi.image_url) AS image
+    FROM product p
+    LEFT JOIN product_image pi ON p.product_id = pi.product_id
+    WHERE p.category_id = ?
+    GROUP BY p.product_id, p.name, p.price, p.brand_name;
+    `, [categoryId]);
+
     console.log(res);
  
-    if (res.length == 0) {
+    if (res.length < 1) {
         throw { status: 404, message: "Product not found" };
     }
     return res;
@@ -61,10 +69,33 @@ const remove = async (id) => {
     }
 };
 
+const update = async (id, productDetails) => {
+    const res = await query(
+      `UPDATE product
+       SET name = ?, description = ?, price = ?, stock_quantity = ?, size = ?, color = ?, material = ?, brand_name = ?, category_id = ? 
+       WHERE product_id = ?`,
+      [
+        productDetails.name,
+        productDetails.description,
+        productDetails.price,
+        productDetails.stock_quantity,
+        productDetails.size,
+        productDetails.color,
+        productDetails.material,
+        productDetails.brand_name,
+        productDetails.category_id,
+        id,
+      ]
+    );
+    return res;
+  };
+  
+
 module.exports={
     getAll,
     get,
-    getByName,
+    getByCategoryName,
     add,
-    remove
+    remove,
+    update
 }
