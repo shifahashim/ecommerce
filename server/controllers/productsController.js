@@ -50,13 +50,14 @@ const getProduct=async(req,res)=>{
 
 const getProductByCategoryName=async(req,res)=>{
     try{
+        console.log(req.params.category_name);
         const category=await query(`SELECT category_id FROM category WHERE category_name=?;`,[req.params.category_name])
-        if (category.length === 0) {
+        if (category.length < 1) {
             throw { status: 404, message: 'Category not found' };
         }
-   
+        
         const categoryId=category[0].category_id;
-        console.log(category);
+        console.log(category[0].category_id);
         const product =await products.getByCategoryName(categoryId);
         res.status(200).json({ success: true, product: product});
     }
