@@ -17,7 +17,9 @@ const createProductTable = async () => {
                 material VARCHAR(255),
                 brand_name VARCHAR(255),
                 category_id VARCHAR(36),
-                FOREIGN KEY (category_id) REFERENCES category(category_id)  
+                admin_id VARCHAR(36),
+                FOREIGN KEY (category_id) REFERENCES category(category_id)
+                FOREIGN KEY (admin_id) REFERENCES user(user_id) ON DELETE CASCADE;
             );`
         );
         console.log("Product table created successfully");

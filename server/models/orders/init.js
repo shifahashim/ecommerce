@@ -14,6 +14,8 @@ const createOrderTable = async () => {
         shipping_fee DECIMAL(10, 2) NOT NULL,
         product_id VARCHAR(36) NOT NULL,
         quantity VARCHAR(36) NOT NULL,
+        admin_id VARCHAR(36),
+        FOREIGN KEY (admin_id) REFERENCES user(user_id),
         FOREIGN KEY (product_id) REFERENCES product(product_id),
         FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE
       );`
