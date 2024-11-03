@@ -3,7 +3,7 @@ const productImages = require('../models/products/productImages.js')
 const uploadOnCloudinary = require('../services/cloudinary.js')
 const AddNewProduct = async (req, res) => {
     try {
-        const product = await products.add(req.body);
+        const product = await products.add(req.params.admin_id,req.body);
         let uploadedImages=[];
 
         if (req.files && req.files.length > 0) {
@@ -30,6 +30,17 @@ const AddNewProduct = async (req, res) => {
 const getAllproducts=async(req,res)=>{
     try{
         const productList =await products.getAll();
+        res.status(200).json({ success: true, productList: productList});
+    }
+    catch(err) {
+        res.status(500).json({ success: false, message: 'Error fetching products', error: err.message });
+    
+    }
+}
+
+const getAllproductsforAdmin=async(req,res)=>{
+    try{
+        const productList =await products.getforAdmin(req.params.admin_id);
         res.status(200).json({ success: true, productList: productList});
     }
     catch(err) {
@@ -91,6 +102,7 @@ const updateProduct = async (req, res) => {
       material,
       brand_name,
       category_id,
+      admin_id
     } = req.body;
     console.log(brand_name);
     console.log(size);
@@ -111,6 +123,7 @@ const updateProduct = async (req, res) => {
         material: material ?? existingProduct[0].material,
         brand_name: brand_name ?? existingProduct[0].brand_name,
         category_id: category_id ?? existingProduct[0].category_id,
+        admin_id: admin_id ?? existingProduct[0].admin_id,
       };
 
       console.log("Updating product data:", updatedProductData);
@@ -134,5 +147,6 @@ module.exports ={
     getProduct,
     getProductByCategoryName,
     deleteProduct,
-    updateProduct
+    updateProduct,
+    getAllproductsforAdmin
 }

@@ -10,7 +10,7 @@ const AddNewUser = async (req, res) => {
               message: user.message,
             });
           }
-        res.status(201).json({ success: true, message: "User added successfully", userId: user.user_id });
+        res.status(201).json({ success: true, message: "User added successfully", userId: user.userId });
     } catch (err) {
         if (!res.headersSent) {
             res.status(500).json({ message: 'Error adding user', error: err.message });

@@ -27,7 +27,7 @@ const handleLogin = async (req, res) => {
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000,
       });
-      res.json({ access });
+      res.json({ access,user_id:user.user_id });
     } else {
       res.status(401).json({ message: "Unauthorized" });
     }

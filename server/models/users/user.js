@@ -11,50 +11,57 @@ const register =async(username,password,email)=>{
       ]);
       
 }
-
 const add = async (userDetails) => {
-    const {
-        fullname,
-        email,
-        password,
-        phonenumber,
-        address_line_1,
-        address_line_2,
-        city,
-        state,
-        postal_code,
-        country,
-        userrole
-    } = userDetails;
-    
-    const existingUser = await query("SELECT * FROM user WHERE email = ?",[email]);
-    if(existingUser?.length)
-    {
-        return{success:false,message:"A user with this email exist."}
-    }
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const userId = uuid();
-    const res = await query(`
-        INSERT INTO user ( 
-            user_id,
-            fullname,
-            email,
-            password,
-            phonenumber, 
-            address_line_1, 
-            address_line_2, 
-            city, 
-            state, 
-            postal_code, 
-            country, 
-            userrole
-        ) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?);`,
-        [userId,fullname,email,hashedPassword,phonenumber, address_line_1, address_line_2, city, state, postal_code, country, userrole,userId]
-    );
+  const {
+      fullname,
+      email,
+      password,
+      phonenumber,
+      address_line_1,
+      address_line_2,
+      city,
+      state,
+      postal_code,
+      country,
+      userrole
+  } = userDetails;
+  
+  // Check for existing user
+  const existingUser = await query("SELECT * FROM user WHERE email = ?", [email]);
+  if (existingUser.length) { // No need for optional chaining here
+      return { success: false, message: "A user with this email exists." };
+  }
 
-    return {userId,...res};
+  // Hash password
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const userId = uuid();
+
+  // Insert new user into the database
+  const result = await query(`
+      INSERT INTO user ( 
+          user_id,
+          fullname,
+          email,
+          password,
+          phonenumber, 
+          address_line_1, 
+          address_line_2, 
+          city, 
+          state, 
+          postal_code, 
+          country, 
+          userrole
+      ) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`, 
+      [userId, fullname, email, hashedPassword, phonenumber, address_line_1, address_line_2, city, state, postal_code, country, userrole]
+  );
+
+  // Check if the insertion was successful
+   // Adjust based on your query function's return type
+      return { success: true, userId:userId };
 };
+
+
 
 const get = async ({ id = null, email = null, refresh_token = null }) => {
     if (email) {
