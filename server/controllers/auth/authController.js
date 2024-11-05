@@ -28,6 +28,7 @@ const handleLogin = async (req, res) => {
         maxAge: 24 * 60 * 60 * 1000,
       });
       res.json({ access,user_id:user.user_id });
+      console.log(access,user.user_id)
     } else {
       res.status(401).json({ message: "Unauthorized" });
     }

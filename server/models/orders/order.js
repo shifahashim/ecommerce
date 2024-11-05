@@ -4,7 +4,7 @@ const {v4:uuid} = require('uuid');
 const add= async (user_id, orderDetails) => {
     const order_id = uuid();
     const {
-        order_status = 'pending',
+        order_status,
         total_amount,
         shipping_fee,
         product_id,

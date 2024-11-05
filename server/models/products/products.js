@@ -46,6 +46,9 @@ const get = async (id) => {
         throw { status: 404, message: "Product not found" };
     }
 
+    // Split the images field by commas and convert it to an array
+    res[0].images = res[0].images ? res[0].images.split(',') : [];
+
     return res;
 };
 
